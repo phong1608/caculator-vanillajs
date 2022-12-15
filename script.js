@@ -5,7 +5,7 @@ let numberButton=document.querySelectorAll('[data-number]')
 let operationButton=document.querySelectorAll('[data-operation]')
 let clearButton=document.querySelector('[data-all-clear]');
 let deleteButton=document.querySelector('[data-delete]');
-console.log(deleteButton)
+console.log(equalButton)
 
 class Calculator{
   constructor(currentOperationText,previousOperationText)
@@ -30,8 +30,12 @@ class Calculator{
   chooseOperation(button)
   {
     if(this.currentOperand =='') return;
-
-    this.previouOperand=this.currentOperand+button;
+    if(this.previouOperand!==''){
+      this.compute();
+      
+    }
+    this.operation =button
+    this.previouOperand=this.currentOperand;
     this.currentOperand=''
 
   }
@@ -39,6 +43,33 @@ class Calculator{
   {
     if(button === '.'&&this.currentOperand.includes('.')) return
     this.currentOperand=this.currentOperand.toString() + button.toString()
+  }
+  compute()
+  {
+    let computation
+    let curr=parseFloat(this.currentOperand)
+    let prev=parseFloat(this.previouOperand);
+    if(isNaN(curr)||isNaN(prev)) return;
+    switch(this.operation){
+      case '+':
+        computation=curr+prev;
+        break
+      case '-':
+        computation=prev-curr;
+        break
+      case '*':
+        computation=curr*prev;
+        break
+      case '÷':
+        computation=prev/curr;
+        break
+      default:
+        return
+        
+    }
+    this.currentOperand=computation;
+    this.previouOperand='';
+    this.operation=undefined;
   }
 
 }
@@ -63,3 +94,8 @@ operationButton.forEach(e=>{
     calculator.updateDisplay();
   }
 })
+equalButton.onclick=()=>
+{
+  calculator.compute();
+  calculator.updateDisplay();
+}
